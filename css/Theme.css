@@ -1,3 +1,4 @@
+
 body
 {
 	font-family				: Helvetica, Arial, sans-serif;
@@ -16,6 +17,7 @@ body>.page>header
 .page>main
 {
 	padding					: 1em;
+	box-sizing				: border-box;
 }
 .list
 {
@@ -345,6 +347,7 @@ input[type="submit"]
 	background				: #ffffff;
 	margin					: 0 auto;
 	padding					: 1em;
+	box-sizing				: border-box;
 }
 
 .field_container
@@ -380,7 +383,7 @@ input[type="submit"]
 	left					: 45%;
 	position				: absolute;
 	transition-duration		: .2s;
-	transition-timing-functi: cubic-bezier(.4,0,.2,1);
+	transition-timing-function: cubic-bezier(.4,0,.2,1);
 	visibility				: hidden;
 	width					: 10px;
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Genus</title>
+    <link rel="stylesheet" href="../css/Core.css">
+    <link rel="stylesheet" href="../css/Theme.css">
+
+    <script src="../Util.js"></script>
+    <script src="../js/Navigation.js"></script>
+    <script src="../js/Router.js"></script>
+    <script src="../js/Page.js"></script>
+    <script src="example.js"></script>
+  </head>
+  <body>
+    <div class="page active" id="page1">
+      <header> <h1>page 1</h1>
+      </header>
+      <main>
+        <a href="#page2">to Page 2</a>
+        <a href="#menu1">Menu1</a>
+      </main>
+      <footer>
+      </footer>
+    </div>
+    <div class="page" id="page2">
+      <header> page2 </header>
+      <main>
+        content 2
+        <a href="#page1">to Page 1</a>
+        <a href="#page3">to Page 3</a>
+        <a href="#menu2">Menu2</a>
+      </main>
+      <footer>
+      </footer>
+    </div>
+    <div class="page" id="page3">
+      <header> page3 </header>
+      <main>
+        <div class="container">content 3
+          <a href="#page1">to Page 1</a>
+          <a href="#" data-new-page="fooo">to Page 4</a>
+        </div>
+      </main>
+      <footer></footer>
+    </div>
+	<div class="panel right" id="menu1">
+		Hellow World
+	</div>
+	<div class="panel left" id="menu2">
+		Hellow World
+	</div>
+  </body>
+</html>
+
