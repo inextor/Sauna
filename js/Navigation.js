@@ -21,6 +21,7 @@ class Navigation
 
 			if( ! href || href === '#') return;
 
+==== BASE ====
 			var hash = href.substring( href.indexOf('#')+1 );
 			var obj	= Utils.getById( hash );
 
@@ -75,7 +76,7 @@ class Navigation
 
 		if( !target )
 		{
-			this.log('No found id:'+clickedHashId );
+			this.log('No found id: '+clickedHashId );
 			return;
 		}
 
@@ -126,8 +127,8 @@ class Navigation
 			//TODO BUG problems with diff hash with similar endings
 			//are detected as equals example #pageRide and #pageRides
 			var index	= this.history[ i ].indexOf( '#'+clickedHashId );
-			var diff	= this.history[i].length-(clickedHashId.length+1);
-			if( index !== -1	&& diff === index )
+			var diff	= this.history[i].length - ( clickedHashId.length + 1 );
+			if( index !== -1 && diff === index )
 			{
 				prev = i;
 				break;
@@ -136,7 +137,7 @@ class Navigation
 
 		if( prev === false )
 		{
-			//nuevo push
+			//new push
 			if( isFromPanel )
 			{
 				history.replaceState({},'',h );
