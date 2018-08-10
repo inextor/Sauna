@@ -1,34 +1,71 @@
 class Router
 {
-	constructor()
+	constructor( navigation)
 	{
-		this.funList	= {};
+		this.pageList	= {};
+		this._counter	= 1;
+		this.pagesById	= {};
+		this.navigation	= navigation;
 	}
 
-	add( regex, func )
+	getNewId()
 	{
-		if( typeof name == 'function')
+		this._counter = this._counter+1;
+		return 'Sauna_'+this._counter;
+	}
+
+	getById( id )
+	{
+		if( id in this.pagesById )
 		{
-			this.funList.ALL.push( name );
-			return;
+			return this.pagesById[ id ].page;
+		}
+		return null;
+	}
+
+	removePageById( id )
+	{
+		if( id in this.pagesById )
+		{
+			delete this.pageList[ this.pagesById[ id ].regex ];
+			delete this.pagesById[ id ];
+		}
+	}
+
+	setPageHandler( regex, page )
+	{
+		if( page.getId() === null )
+		{
+			page.setId( this.getNewId() );
 		}
 
-		if( typeof name === 'string' && typeof func === 'function' )
+		page.onInit();
+
+		this.pageList[ regex ] = page;
+		this.pagesById[ page.getId() ] = { page: page, regex: regex };
+
+		page._element.addEventListener('transitionend',()=>
 		{
-			if( typeof this.funList[ name ] === 'undefined' )
+			if( page._element.classList.contains('active') )
 			{
-				this.funList[ name ] = [];
-			}
+				if( page != this.navigation.lastPage )
+				{
+					//page.onShow();
+				 	//this.router.run( window.location.href );
+					this.navigation.lastPage = page;
+					this.log('PAGE_CALLED', page.getId(), 'GREEN' );
+				}
 
-			this.funList[ name ].push( func );
-		}
+				this.navigation.removeNotPrevious();
+			}
+		});
 	}
 
-	run( name )
+	getPage( name )
 	{
-		var to_run  = this.funList.ALL;
+		var to_run  = ()=>{ console.log('No Page handler for '+(name.toString())) };
 
-		for (let i in this.funList)
+		for (let i in this.pageList)
 		{
 			let regParts = i.match(/^\/(.*?)\/([gim]*)$/);
 
@@ -36,11 +73,21 @@ class Router
 
 			if( regexp.test( name ) )
 			{
-				to_run = this.funList[ i ];
-
-				for (var j=0; j< to_run.length; j++)
-					to_run[ j ].call(this, name );	// you can pass in a "this" parameter here.
+				return this.pageList[ i ];
 			}
 		}
+
+		return new Page();
+	}
+	run( url )
+	{
+		let page = this.getPage( url );
+		page.onShow( url );
+	}
+
+	log(...args)
+	{
+		if( this.debug )
+			console.log.call(console,args);
 	}
 }
