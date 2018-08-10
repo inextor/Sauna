@@ -21,7 +21,6 @@ class Navigation
 
 			if( ! href || href === '#') return;
 
-==== BASE ====
 			var hash = href.substring( href.indexOf('#')+1 );
 			var obj	= Utils.getById( hash );
 
