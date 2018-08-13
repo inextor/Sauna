@@ -59,7 +59,10 @@ class Page
 
 	getId()
 	{
-		return this._element.getAttribute('id');
+		if( this._element )
+			return this._element.getAttribute('id');
+
+		return null;
 	}
 
 	setId( id )

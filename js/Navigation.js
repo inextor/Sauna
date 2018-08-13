@@ -21,7 +21,15 @@ class Navigation
 
 			if( ! href || href === '#') return;
 
-			var hash = href.substring( href.indexOf('#')+1 );
+
+			let hash	= href.substring( href.indexOf('#')+1 );
+			let bang	= hash.indexOf('!');
+
+			if( bang !== -1 )
+			{
+				hash = hash.substring( 0, bang );
+			}
+
 			var obj	= Utils.getById( hash );
 
 			if( ! obj )
@@ -57,7 +65,14 @@ class Navigation
 
 	click_anchorHash( h, replace = false )
 	{
-		var clickedHashId	= h.substring( h.indexOf('#')+1 );
+		let clickedHashId	= h.substring( h.indexOf('#')+1 );
+		let bang	= clickedHashId.indexOf('!');
+
+		if( bang !== -1 )
+		{
+			clickedHashId = clickedHashId.substring( 0, bang );
+		}
+
 		var current			= Utils.getFirst('.panel.open') || Utils.getFirst('.page.active');
 
 		if( current === null || ( current.getAttribute( 'id' ) == clickedHashId && !current.classList.contains('panel') ) )

@@ -1,4 +1,4 @@
-Util.addOnLoad(()=>
+Utils.addOnLoad(()=>
 {
 
   let n = new Navigation();
