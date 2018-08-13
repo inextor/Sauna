@@ -1,4 +1,4 @@
-class Util
+class Utils
 {
 	static addOnLoad(callback)
 	{
