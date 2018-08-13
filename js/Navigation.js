@@ -17,7 +17,7 @@ class Navigation
 		Utils.delegateEvent('click',document.body,'a',(evt)=>
 		{
 
-			var href = evt.target.getAttribute('href');
+			let href = evt.target.getAttribute('href');
 
 			if( ! href || href === '#') return;
 
@@ -79,7 +79,7 @@ class Navigation
 		{
 			if( this.handle_url_parameters )
 			{
-				history.pushState({},'','#'+clickedHashId );
+				history.pushState({},'', h );
 				let page = this.router.run( window.location.href );
 				//page.onShow();
 			}
