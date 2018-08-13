@@ -386,7 +386,7 @@ class Navigation
 			if( !found )
 			{
 				let pageId 	= z[i].getAttribute('id' );
-				let page	= router.getById( pageId  )
+				let page	= this.router.getById( pageId  )
 
 				if( page.options.removeOnPop )
 				{
@@ -395,7 +395,7 @@ class Navigation
 
 					z[i].remove();
 					page.onRemove();
-					router.removePageById( pageId );
+					this.router.removePageById( pageId );
 				}
 				else
 				{
