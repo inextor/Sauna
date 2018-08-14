@@ -74,15 +74,16 @@ class Navigation
 		}
 
 		var current			= Utils.getFirst('.panel.open') || Utils.getFirst('.page.active');
+		let inHistory = this.history.some( i => i === h );
 
-		if( current === null || ( current.getAttribute( 'id' ) == clickedHashId && !current.classList.contains('panel') ) )
+
+		//When is the same page //Only change the url parameters or bang
+		if( current !== null  && current.getAttribute( 'id' ) == clickedHashId && !current.classList.contains('panel')  )
 		{
-			if( this.handle_url_parameters )
-			{
-				history.pushState({},'', h );
-				let page = this.router.run( window.location.href );
-				//page.onShow();
-			}
+			this.history.pop();
+			this.history.push( h );
+			history.replaceState( {},'', h );
+			this.router.run( window.location.href );
 			return;
 		}
 
@@ -131,25 +132,39 @@ class Navigation
 			isFromPanel	= current.getAttribute('id');
 		}
 
-
-		var prev		= false;
-		var toRemove	= [];
-		for( var i=this.history.length-1; i>=0; i-- )
+		if( inHistory )
 		{
-			toRemove.push( this.history[ i ] );
+			var index	= this.history.indexOf( h );
+			let diff 	= this.history.length - index;
 
-			//TODO BUG problems with diff hash with similar endings
-			//are detected as equals example #pageRide and #pageRides
-			var index	= this.history[ i ].indexOf( '#'+clickedHashId );
-			var diff	= this.history[i].length - ( clickedHashId.length + 1 );
-			if( index !== -1 && diff === index )
+			if( (this.history.length - diff) == 0 )
+				diff--;
+
+			while( diff )
 			{
-				prev = i;
-				break;
+				if( this.history.length > 0 )
+					this.history.pop();
+				diff--;
 			}
 		}
 
-		if( prev === false )
+		//var toRemove	= [];
+		//for( var i=this.history.length-1; i>=0; i-- )
+		//{
+		//	toRemove.push( this.history[ i ] );
+
+		//	//TODO BUG problems with diff hash with similar endings
+		//	//are detected as equals example #pageRide and #pageRides
+		//	var index	= this.history[ i ].indexOf( '#'+clickedHashId );
+		//	var diff	= this.history[i].length - ( clickedHashId.length + 1 );
+		//	if( index !== -1 && diff === index )
+		//	{
+		//		prev = i;
+		//		break;
+		//	}
+		//}
+
+		if( inHistory === false )
 		{
 			//new push
 			if( isFromPanel )
@@ -167,7 +182,7 @@ class Navigation
 				return;
 			}
 
-			this.history.push( location.href );
+			this.history.push( h );
 			history.pushState({},'',h );
 			this.makeTransitionPush( current, target);
 			return;
@@ -244,6 +259,10 @@ class Navigation
 		}
 
 		var prevUrl		= this.history[ this.history.length-1 ];
+
+		if( this.history.length > 1 )
+			prevUrl		= this.history[ this.history.length-2 ];
+
 		this.click_anchorHash( prevUrl, true );
 	}
 
