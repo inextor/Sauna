@@ -80,9 +80,17 @@ class Navigation
 		//When is the same page //Only change the url parameters or bang
 		if( current !== null  && current.getAttribute( 'id' ) == clickedHashId && !current.classList.contains('panel')  )
 		{
+			if( replace )
+			{
 			this.history.pop();
 			this.history.push( h );
 			history.replaceState( {},'', h );
+			}
+			else
+			{
+				history.pushState( {},'', h );
+			}
+
 			this.router.run( window.location.href );
 			return;
 		}
@@ -337,32 +345,6 @@ class Navigation
 		var ids			= {};
 
 		this.makeTransitionPop( prevPage ,pageToPop );
-	}
-
-	makeTransitionPush( current ,next )
-	{
-		let currentId = current.getAttribute('id');
-		let currentPage	= this.router.getById( currentId );
-
-		if( currentPage )
-			currentPage.onHide();
-
-		let nextId	= next.getAttribute('id');
-		let nextPage = this.router.getById( nextId );
-
-		if( nextPage )
-			nextPage.onShow();
-
-		next.classList.add('noanimation');
-		setTimeout(function()
-		{
-			next.classList.remove('previous');
-			next.classList.remove('noanimation');
-			next.classList.add('active');
-
-			current.classList.add('previous');
-			current.classList.remove('active');
-		},10 );
 	}
 
 	makeTransitionPop( previous ,current)

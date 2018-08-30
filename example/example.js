@@ -1,7 +1,7 @@
 Utils.addOnLoad(()=>
 {
 
-  let n = new Navigation();
+  let n = new NavigationSpa();
 
 	//let page1 = new Page({ element: '#page1'});
 	//let page2 = new Page({ element: '#page2'});
@@ -31,7 +31,7 @@ Utils.addOnLoad(()=>
 
 	//console.log('Page 1 is ', page1.getId() );
 
-	n.setInitPageId( 'page1' );
+	n.setPageInit( 'page1' );
 });
 
 
