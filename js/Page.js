@@ -274,14 +274,14 @@ class Page extends HTMLElement
 		{
 			//this.style['transition'] = 'all 0s linear';
 			//this.setTransition(false);
-			this.classList.add("noanimation");
+			//this.classList.add("noanimation");
 
-			this.promiseDelay(10,()=>{
-				this.classList.add("previous");
-				this.classList.remove("noanimation");
-				this.classList.remove("previous");
-				this.classList.add("active");
-			});
+			//this.promiseDelay(10,()=>{
+			//	this.classList.add("previous");
+			//	this.classList.remove("noanimation");
+			//	this.classList.remove("previous");
+			//	this.classList.add("active");
+			//});
 
 			//this.promiseDelay(10,()=>this.removeAttribute("status"))
 			//	.then(()=> this.promiseDelay(10,()=>this.setTransition(true)))
@@ -290,7 +290,7 @@ class Page extends HTMLElement
 		}
 		else
 		{
-			this.classList.add("active");
+//			this.classList.add("active");
 			//this.setAttribute("status","active");
 		}
 
