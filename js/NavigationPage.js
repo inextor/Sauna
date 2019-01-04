@@ -1,4 +1,9 @@
-class NavigationSpa
+import Util from './Util.js';
+import Page from './Page.js';
+import Panel from './Panel.js';
+import Router from './Router.js';
+
+export default class Navigation
 {
 	constructor()
 	{
@@ -30,7 +35,7 @@ class NavigationSpa
 
 		console.log('PageInitId '+pageInit );
 
-		Utils.delegateEvent('click',document.body,'a',(evt)=>
+		Util.delegateEvent('click',document.body,'a',(evt)=>
 		{
 
 			let href = evt.target.getAttribute('href');
@@ -39,7 +44,7 @@ class NavigationSpa
 
 			let hash = this.getPageIdByHash( href );
 
-			var obj	= Utils.getById( hash );
+			var obj	= Util.getById( hash );
 
 			if( ! obj )
 			{
@@ -50,10 +55,10 @@ class NavigationSpa
 			evt.preventDefault();
 			evt.stopImmediatePropagation();
 
-			if( obj.classList.contains('page') || obj.classList.contains('panel') )
+			if( obj instanceof Page  || obj instanceof Panel )
 			{
 				this.click_anchorHash( href, false );
-				Utils.stopEvent( evt );
+				Util.stopEvent( evt );
 				return;
 			}
 		});
@@ -63,8 +68,8 @@ class NavigationSpa
 			this.pop_event( evt );
 		});
 
-		var x			= Utils.getAll('div.page');
-		var last		= Utils.getById( pageInit);
+		var x			= Util.getAll('sauna-page');
+		var last		= Util.getById( pageInit);
 		//this.lastPage	= this.router.getById( pageInit );
 
 		last.classList.add('start','active');
@@ -74,18 +79,19 @@ class NavigationSpa
 
 	getCurrent()
 	{
-		let panel = Utils.getFirst('.panel.open');
+		let panel = Util.getFirst('.panel.open');
 
 		if( panel )
 			return panel;
 
-		return Utils.getFirst('.page.active');
+		return Util.getFirst('sauna-page.active');
 	}
 
 	getCurrentStateHref()
 	{
-		if( this.history.length > 0 )
-			return this.history[ this.history.length - 1];
+		return window.location.hash;
+		//if( this.history.length > 0 )
+		//	return this.history[ this.history.length - 1];
 	}
 
 	getActionType( href )
@@ -234,7 +240,7 @@ class NavigationSpa
 						this.pushPageFromPage( current, next, true );//XXX Take care of this
 						return;
 					}
-					console.erro('replace panel from page THIS MUST NEVER HAPPEN');
+					console.error('replace panel from page THIS MUST NEVER HAPPEN');
 					return;
 				}
 
@@ -271,6 +277,7 @@ class NavigationSpa
 				if( currentType === 'PAGE' )
 				{
 					this.popPageFromPage( current, next );
+					return;
 				}
 
 				//Current is panel
@@ -290,13 +297,10 @@ class NavigationSpa
 		}
 	}
 
-
-
 	pushPageFromPage( nextPageElement, currentPageElement, is_replace )
 	{
 		this.makeTransitionPush( currentPageElement, nextPageElement, is_replace );
 	}
-
 
 	makeTransitionPush( current ,next, is_replace )
 	{
@@ -312,18 +316,21 @@ class NavigationSpa
 		//XXX if( nextPage )
 		//XXX 	nextPage.onShow();
 
-		next.classList.add('noanimation');
-		setTimeout(function()
-		{
-			next.classList.remove('previous');
-			next.classList.remove('noanimation');
-			next.classList.add('active');
+		current.popIn();
+		next.pushIn();
 
-			if( !is_replace )
-				current.classList.add('previous');
+		//next.classList.add('noanimation');
+		//setTimeout(function()
+		//{
+		//	next.classList.remove('previous');
+		//	next.classList.remove('noanimation');
+		//	next.classList.add('active');
 
-			current.classList.remove('active');
-		},10 );
+		//	if( !is_replace )
+		//		current.classList.add('previous');
+
+		//	current.classList.remove('active');
+		//},10 );
 	}
 
 	openPanelFromPage( panel, page )
@@ -343,7 +350,7 @@ class NavigationSpa
 		panel.classList.remove('open');
 		document.body.classList.remove('panel_open');
 
-		var currentPage = Utils.getFirst('.page.active');
+		var currentPage = Util.getFirst('sauna-page.active');
 
 		if( currentPage !== pageElement )
 			this.makeTransitionPush( currentPage, pageElement );
@@ -359,24 +366,23 @@ class NavigationSpa
 		if( bang !== -1 )
 		{
 			clickedHashId = clickedHashId.substring( 0, bang );
-
 		}
 
-		return Utils.getById( clickedHashId );
+		return Util.getById( clickedHashId );
 	}
 
 	hasPanelActive()
 	{
-		var current = Utils.getFirst('.page.active');
+		var current = Util.getFirst('sauna-page.active');
 		return current.classList.has('.panel');
 	}
 
 	getElementType( element )
 	{
-		if( element.classList.contains('panel') )
+		if( element instanceof Panel )
 			return 'PANEL';
 
-		if( element.classList.contains('page') )
+		if( element instanceof Page )
 			return 'PAGE';
 
 		return 'NONE';
@@ -387,11 +393,11 @@ class NavigationSpa
 	{
 		panel.classList.remove('open');
 		document.body.classList.remove('panel_open');
-		var currentPage = Utils.getFirst('.page.active');
+		var currentPage = Util.getFirst('sauna-page.active');
 		if( currentPage === pageElement )
 			return;
 
-		this.makeTransitionPop( page ,currentPage );
+		this.makeTransitionPop( pageElement ,currentPage );
 	}
 
 	popPageFromPage( pageToPop, prevPage )
@@ -401,15 +407,17 @@ class NavigationSpa
 
 	makeTransitionPop( previous ,current)
 	{
-		previous.classList.add('active');
-		previous.classList.remove('previous');
-		current.classList.remove('active');
-		current.classList.remove('previous');
+		previous.pushOut();
+		current.popOut();
+		//previous.classList.add('active');
+		//previous.classList.remove('previous');
+		//current.classList.remove('active');
+		//current.classList.remove('previous');
 	}
 
 	removePreviousFromStack()
 	{
-		let divs = Array.from( document.querySelectorAll('.page') );
+		let divs = Array.from( document.querySelectorAll('sauna-page') );
 
 		let ids = {};
 

@@ -346,3 +346,4 @@ class Page extends HTMLElement
 }
 
 customElements.define('sauna-page', Page);
+export default Page;

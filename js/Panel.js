@@ -85,4 +85,5 @@ class Panel extends HTMLElement
 	}
 }
 
-customElements.define('sauna-panel', Page);
+customElements.define('sauna-panel', Panel);
+export default Panel;

@@ -1,4 +1,4 @@
-class Router
+export default class Router
 {
 	constructor( navigation)
 	{
@@ -32,11 +32,12 @@ class Router
 		}
 	}
 
+	//WTF
 	setPageHandler( regex, page )
 	{
-		if( page.getId() === null )
+		if( page.getAttribute("id") === null )
 		{
-			page.setId( this.getNewId() );
+			page.setAttribute("id", this.getNewId() );
 		}
 
 		page.onInit();
@@ -44,21 +45,22 @@ class Router
 		this.pageList[ regex ] = page;
 		this.pagesById[ page.getId() ] = { page: page, regex: regex };
 
-		page._element.addEventListener('transitionend',()=>
-		{
-			if( page._element.classList.contains('active') )
-			{
-				if( page != this.navigation.lastPage )
-				{
-					//page.onShow();
-				 	//this.router.run( window.location.href );
-					this.navigation.lastPage = page;
-					this.log('PAGE_CALLED', page.getId(), 'GREEN' );
-				}
+		//XXX commented _element is not necesary but what this is doing????
+		//page._element.addEventListener('transitionend',()=>
+		//{
+		//	if( page._element.classList.contains('active') )
+		//	{
+		//		if( page != this.navigation.lastPage )
+		//		{
+		//			//page.onShow();
+		//		 	//this.router.run( window.location.href );
+		//			this.navigation.lastPage = page;
+		//			this.log('PAGE_CALLED', page.getId(), 'GREEN' );
+		//		}
 
-				this.navigation.removeNotPrevious();
-			}
-		});
+		//		this.navigation.removeNotPrevious();
+		//	}
+		//});
 	}
 
 	getPage( name )
