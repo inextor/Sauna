@@ -33,7 +33,7 @@ template.innerHTML = `
 
 :host([type="left"][open])
 :host([type="right"][open])
-,:host.left.open
+,:host(.open)
 {
   z-index					: 5;
   transform				: translate3d(0,0,0);

@@ -79,7 +79,7 @@ export default class Navigation
 
 	getCurrent()
 	{
-		let panel = Util.getFirst('.panel.open');
+		let panel = Util.getFirst('sauna-panel.open');
 
 		if( panel )
 			return panel;
@@ -89,15 +89,19 @@ export default class Navigation
 
 	getCurrentStateHref()
 	{
-		return window.location.hash;
-		//if( this.history.length > 0 )
-		//	return this.history[ this.history.length - 1];
+		//return window.location.hash;
+		if( this.history.length > 0 )
+			return this.history[ this.history.length - 1];
 	}
 
 	getActionType( href )
 	{
 		if( href == this.getCurrentStateHref() )
 		{
+			let clickElement = this.getElementByHref( href );
+			if( clickElement !== null && clickElement instanceof Panel )
+				return 'BACK';
+
 			//Do nothing
 			return 'NONE';
 		}
@@ -224,10 +228,6 @@ export default class Navigation
 
 		let next	= this.getElementByHref( hash );
 		let nextType	= this.getElementType( next );
-
-		setTimeout(()=>
-		{
-		},500);
 
 		switch( action )
 		{
