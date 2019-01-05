@@ -1,297 +1,338 @@
-class Navigation
+import Util from './Util.js';
+import Page from './Page.js';
+import Panel from './Panel.js';
+import Router from './Router.js';
+
+export default class Navigation
 {
 	constructor()
 	{
-		this.history					= [];
-		this.history_begins_index		= window.history.length;
-		this.handle_url_parameters		= true;
-		this.router						= new Router( this );
-		this.debug						= false;
-		this.lastPage					= null;
+		this.history	= [];
+		this.router	= new Router( this );
 	}
 
-	setInitPageId( pageInitId )
+	getPageIdByHash( href )
 	{
-		this.log('PageInitId '+pageInitId);
+		let hash	= href.substring( href.indexOf('#')+1 );
+		let bang	= hash.indexOf('!');
 
-		Utils.delegateEvent('click',document.body,'a',(evt)=>
+		if( bang !== -1 )
+		{
+			hash = hash.substring( 0, bang );
+		}
+		return hash;
+	}
+
+	isPageHashInHistory( hash )
+	{
+		let id = this.getPageIdByHash( hash );
+
+		return this.history.some( i => id == this.getPageIdByHash( i ) );
+	}
+
+	setPageInit( pageInit )
+	{
+
+		console.log('PageInitId '+pageInit );
+
+		Util.delegateEvent('click',document.body,'a',(evt)=>
 		{
 
 			let href = evt.target.getAttribute('href');
 
 			if( ! href || href === '#') return;
 
+			let hash = this.getPageIdByHash( href );
 
-			let hash	= href.substring( href.indexOf('#')+1 );
-			let bang	= hash.indexOf('!');
-
-			if( bang !== -1 )
-			{
-				hash = hash.substring( 0, bang );
-			}
-
-			var obj	= Utils.getById( hash );
+			var obj	= Util.getById( hash );
 
 			if( ! obj )
+			{
+				console.error('Page '+hash+' Does not exists' );
 				return;
+			}
 
 			evt.preventDefault();
 			evt.stopImmediatePropagation();
 
-			if( obj.classList.contains('page') || obj.classList.contains('panel') )
+			if( obj instanceof Page  || obj instanceof Panel )
 			{
 				this.click_anchorHash( href, false );
-				Utils.stopEvent( evt );
+				Util.stopEvent( evt );
 				return;
 			}
 		});
 
-		window.addEventListener( 'popstate' , (evt)=>{ this.evt_popstate(evt); } );
+		window.addEventListener( 'popstate' , (evt)=>
+		{
+			this.pop_event( evt );
+		});
 
-		var x			= Utils.getAll('div.page');
-		var last		= Utils.getById( pageInitId );
-		this.lastPage	= this.router.getById( pageInitId );
+		var x			= Util.getAll('sauna-page');
+		var last		= Util.getById( pageInit);
+		//this.lastPage	= this.router.getById( pageInit );
 
-		last.classList.add('start');
-		this.click_anchorHash('#'+pageInitId , false );
+		last.classList.add('start','active');
+		history.replaceState('#'+pageInit,"",'#'+pageInit);
+		this.history	= [ window.location.hash ];
 	}
 
-
-	log(...args)
+	getCurrent()
 	{
-		if( this.debug )
-			console.log.call(console,args);
+		let panel = Util.getFirst('sauna-panel.open');
+
+		if( panel )
+			return panel;
+
+		return Util.getFirst('sauna-page.active');
 	}
 
-	click_anchorHash( h, replace = false )
+	getCurrentStateHref()
 	{
-		let clickedHashId	= h.substring( h.indexOf('#')+1 );
-		let bang	= clickedHashId.indexOf('!');
+		//return window.location.hash;
+		if( this.history.length > 0 )
+			return this.history[ this.history.length - 1];
+	}
 
-		if( bang !== -1 )
+	getActionType( href )
+	{
+		if( href == this.getCurrentStateHref() )
 		{
-			clickedHashId = clickedHashId.substring( 0, bang );
+			let clickElement = this.getElementByHref( href );
+			if( clickElement !== null && clickElement instanceof Panel )
+				return 'BACK';
+
+			//Do nothing
+			return 'NONE';
 		}
 
-		var current			= Utils.getFirst('.panel.open') || Utils.getFirst('.page.active');
-		let inHistory = this.history.some( i => i === h );
 
+		let clickElement = this.getElementByHref( href );
+		let current	= this.getCurrent();
 
-		//When is the same page //Only change the url parameters or bang
-		if( current !== null  && current.getAttribute( 'id' ) == clickedHashId && !current.classList.contains('panel')  )
+		let clickType	= this.getElementType( clickElement );
+		let currentType = this.getElementType( current );
+
+		if( clickElement === current )
 		{
-			if( replace )
+			return 'SAME';
+		}
+
+
+		if( clickType === 'NONE' )
+		{
+			return 'NONE';
+		}
+
+
+		if( currentType === 'PANEL' )
+		{
+
+			if( this.isPageHashInHistory( href ) )
 			{
-			this.history.pop();
-			this.history.push( h );
-			history.replaceState( {},'', h );
+				return 'GO_BACK';
 			}
-			else
-			{
-				history.pushState( {},'', h );
-			}
 
-			this.router.run( window.location.href );
-			return;
+			return 'REPLACE';
 		}
 
-		var target	= Utils.getById( clickedHashId );
+		//Current IS Page
 
-		if( !target )
+		//Panels always go back or get replaced
+		if( clickType === 'PANEL' )
 		{
-			this.log('No found id: '+clickedHashId );
-			return;
+			//If exists in history go back else replace panel by page
+			return 'PUSH';
 		}
 
-		// target is a panel
-		if( target.classList.contains('panel') )
+		//If is not in history PUSH else POP
+		return this.isPageHashInHistory( href ) ? 'GO_BACK' : 'PUSH';
+	 }
+
+	click_anchorHash( href )
+	{
+		let action = this.getActionType( href );
+
+		switch( action )
 		{
-			//if targe is a panel and is open just close it
-			if( target.classList.contains('open') )
-			{
-				target.classList.remove('open');
-				document.body.classList.remove('panel-open');
-				history.replaceState( {},'', this.history.pop() );
+			case 'NONE': //Same Page
+				console.error('NONE must never happen');
+
 				return;
-			}
+			case 'SAME': //Same page diferent parameters
 
-			if( current && current.classList.contains('panel') )
-			{
-				this.openPanelFromPanel( target, current);
-				history.replaceState({},'',h );
 				return;
-			}
-			//Target is a panel and there are not panels open
-			target.classList.add('open');
-			document.body.classList.add('panel-open');
-			var page = Utils.getFirst('.page.active');
-			this.openPanelFromPage( target, page );
-			this.history.push( window.location.href );
-			history.pushState( {},'', h );
-			return;
-		}
-
-		//Target is not a panel
-		var isFromPanel = false;
-
-		//If there is a panel open just close it and continue
-		if( current && current.classList.contains( 'panel' ) )
-		{
-			isFromPanel	= current.getAttribute('id');
-		}
-
-		if( inHistory )
-		{
-			var index	= this.history.indexOf( h );
-			let diff 	= this.history.length - index;
-
-			if( (this.history.length - diff) == 0 )
-				diff--;
-
-			while( diff )
-			{
-				if( this.history.length > 0 )
-					this.history.pop();
-				diff--;
-			}
-		}
-
-		//var toRemove	= [];
-		//for( var i=this.history.length-1; i>=0; i-- )
-		//{
-		//	toRemove.push( this.history[ i ] );
-
-		//	//TODO BUG problems with diff hash with similar endings
-		//	//are detected as equals example #pageRide and #pageRides
-		//	var index	= this.history[ i ].indexOf( '#'+clickedHashId );
-		//	var diff	= this.history[i].length - ( clickedHashId.length + 1 );
-		//	if( index !== -1 && diff === index )
-		//	{
-		//		prev = i;
-		//		break;
-		//	}
-		//}
-
-		if( inHistory === false )
-		{
-			//new push
-			if( isFromPanel )
-			{
-				history.replaceState({},'',h );
-				prev	= this.history[ this.history.length -1 ];
-				this.pushPageFromPanel( target, current );
+			case 'REPLACE':
+				window.history.replaceState( href, "", href );
+				this.history[ this.history.length -1 ] = href;
+				this.processEvent('REPLACE', href );
+				this.removePreviousFromStack();
 				return;
-			}
-
-			if( replace )
-			{
-				history.replaceState({},'',h );
-				this.makeTransitionPush( current, target );
+			case 'BACK': window.history.go( -1 ); return;
+			case 'PUSH':
+				this.history.push( href );
+				window.history.pushState( href, "", href );
+				this.processEvent('PUSH',href );
+				this.removePreviousFromStack();
 				return;
+			case 'GO_BACK'	: this.goBack( href ); return;
+		}
+	}
+
+	goBack( hash )
+	{
+		let index  = this.history.indexOf( hash )+1;
+		let diff = index - this.history.length;
+
+		history.go( diff );
+	}
+
+	pop_event( evt )
+	{
+		let index = this.history.indexOf( window.location.hash );
+
+		if(  index == -1 )
+		{
+			//this.history.push( window.location.hash );
+			//processEvent( 'PUSH',document.location.hash );
+			let type = this.getActionType( document.location.hash );//This not works because href is already set, Do a new One
+
+			if( type == 'SAME' )
+			{
+
 			}
 
-			this.history.push( h );
-			history.pushState({},'',h );
-			this.makeTransitionPush( current, target);
-			return;
+			if( type !== 'REPLACE' && type !== 'PUSH' )
+				console.error('Some nasty error on navigation');
+
+			if( type === 'REPLACE' )
+				console.log('Fix Replace on pop_event');
+
+			this.processEvent( 'PUSH' , window.location.hash );
+			this.removePreviousFromStack();
+			this.history.push( window.location.hash );
 		}
-
-		//Pop Events
-		history.replaceState({},'', h );
-
-		if( isFromPanel )
-			this.popPageFromPanel( target, current);
 		else
-			this.popPageFromPage( current, target );
-
-		//Removing the previous
-		while( toRemove.length )
 		{
-			var url = toRemove.shift();
-			let zz	= this.history.indexOf( id );
-			this.history.splice( zz ,1 );
-			var id = url.substring( url.indexOf('#')+1 );
-			Utils.getById( id ).classList.remove('previous');
+			let length = this.history.length;
+			this.processEvent( 'GO_BACK', document.location.hash );
+			this.removePreviousFromStack();
+			this.history.splice( index+1 ,  length-index);
 		}
 	}
 
-	replace_root( h )
+	processEvent( action, hash )
 	{
-		var toReplace	= Utils.getFirst('.page.active');
-		var replacement	= Utils.getById( h.substring( h.indexOf('#')+1 ) );
+		let current = this.getCurrent();
+		let currentType	= this.getElementType( current );
 
-		replacement.classList.add('noanimation');
-		replacement.classList.remove('previous');
-		replacement.classList.remove('noanimation');
-		replacement.classList.add('active');
-		toReplace.classList.remove('active');
+		let next	= this.getElementByHref( hash );
+		let nextType	= this.getElementType( next );
 
-		history.replaceState({},'',h);
-
-		var x = Utils.getAll('.page.previous');
-
-		for(var i=0;i<x.length;i++)
+		switch( action )
 		{
-			x[ i ].classList.add('noanimation');
-			x[ i ].classList.remove('previous');
-			x[ i ].classList.remove('noanimation');
-		}
-	}
-
-	push_state( state,title, h )
-	{
-		this.click_anchorHash( h, false );
-	}
-
-	replace_state( state,title, h )
-	{
-		this.click_anchorHash( h, true );
-	}
-
-	/*
-	 	this is only for just for pop
-	*/
-
-	evt_popstate( evt )
-	{
-		if( !this.history.length )
-		{
-			if( navigator.app && navigator.app.exitApp )
+			case 'REPLACE':
 			{
-				navigator.app.exitApp();
+				if( currentType === 'PAGE' )
+				{
+					if( nextType === 'PAGE' )
+					{
+						this.pushPageFromPage( current, next, true );//XXX Take care of this
+						return;
+					}
+					console.error('replace panel from page THIS MUST NEVER HAPPEN');
+					return;
+				}
+
+				//Current is Panel
+				if( nextType == 'PANEl' )
+				{
+					this.openPanelFromPanel( current, next );
+					return;
+				}
+
+				//Current is panel next is page
+				this.pushPageFromPanel( next , current );
 				return;
 			}
+			case 'PUSH':
+			{
+				if( currentType === 'PAGE' )
+				{
+					if( nextType === 'PANEL' )
+					{
+						this.openPanelFromPage( next, current );
+						return;
+					}
 
-			history.go( -(history.length-1) );
-			return;
+					this.pushPageFromPage( next, current, false );
+					return;
+				}
+				//Current is PANEL
+				console.error('Push From Panel To Panel Must never happen');
+				return;
+			}
+			case 'GO_BACK':
+			{
+				if( currentType === 'PAGE' )
+				{
+					this.popPageFromPage( current, next );
+					return;
+				}
+
+				//Current is panel
+
+				//User is responsible for how it looks
+				//Pop and a left panel open it looks bad,
+				//Pop and a right panel it can looks good
+				if( nextType == 'PAGE' )
+				{
+					this.popPageFromPanel( next, current );
+				}
+				else
+				{
+					console.error('next must never be panel, this must never happen');
+				}
+			}
 		}
-
-		var prevUrl		= this.history[ this.history.length-1 ];
-
-		if( this.history.length > 1 )
-			prevUrl		= this.history[ this.history.length-2 ];
-
-		this.click_anchorHash( prevUrl, true );
 	}
 
-	/*
+	pushPageFromPage( nextPageElement, currentPageElement, is_replace )
+	{
+		this.makeTransitionPush( currentPageElement, nextPageElement, is_replace );
+	}
 
-	* target is in History
-		* Target is page
-			* current is panel
-			* current is page
+	makeTransitionPush( current ,next, is_replace )
+	{
+		//XXX let currentId = current.getAttribute('id');
+		//XXX let currentPage	= this.router.getById( currentId );
 
-	* target is not in History
-		* Target is panel
-			* Current is page
-			* current is panel
+		//XXX if( currentPage )
+		//XXX 	currentPage.onHide();
 
-		* Target is page
-			* current is panel
-			* current is page
-	*/
+		//XXX let nextId	= next.getAttribute('id');
+		//XXX let nextPage = this.router.getById( nextId );
 
-	//Target is not in History
+		//XXX if( nextPage )
+		//XXX 	nextPage.onShow();
+
+		current.popIn();
+		next.pushIn();
+
+		//next.classList.add('noanimation');
+		//setTimeout(function()
+		//{
+		//	next.classList.remove('previous');
+		//	next.classList.remove('noanimation');
+		//	next.classList.add('active');
+
+		//	if( !is_replace )
+		//		current.classList.add('previous');
+
+		//	current.classList.remove('active');
+		//},10 );
+	}
+
 	openPanelFromPage( panel, page )
 	{
 		panel.classList.add('open');
@@ -309,7 +350,7 @@ class Navigation
 		panel.classList.remove('open');
 		document.body.classList.remove('panel_open');
 
-		var currentPage = Utils.getFirst('.page.active');
+		var currentPage = Util.getFirst('sauna-page.active');
 
 		if( currentPage !== pageElement )
 			this.makeTransitionPush( currentPage, pageElement );
@@ -317,14 +358,34 @@ class Navigation
 			this.router.run( window.location.href );
 	}
 
-	pushPageFromPage( nextPageElement, currentPageElement )
+	getElementByHref( href )
 	{
-		this.makeTransitionPush( currentPageElement, nextPageElement );
-		//let currentPageObject	= this.router.getById( currentPageElement.getAttribute('id') );
-		//let nextPageObject		= this.router.getById( nextPageElement.getAttribute('id') );
+		let clickedHashId	= href.substring( href.indexOf('#')+1 );
+		let bang	= clickedHashId.indexOf('!');
 
-		//nextPageObject.onShow();
-		//currentPageObject.onHide();
+		if( bang !== -1 )
+		{
+			clickedHashId = clickedHashId.substring( 0, bang );
+		}
+
+		return Util.getById( clickedHashId );
+	}
+
+	hasPanelActive()
+	{
+		var current = Util.getFirst('sauna-page.active');
+		return current.classList.has('.panel');
+	}
+
+	getElementType( element )
+	{
+		if( element instanceof Panel )
+			return 'PANEL';
+
+		if( element instanceof Page )
+			return 'PAGE';
+
+		return 'NONE';
 	}
 
 	// Target is in History
@@ -332,103 +393,49 @@ class Navigation
 	{
 		panel.classList.remove('open');
 		document.body.classList.remove('panel_open');
-		var currentPage = Utils.getFirst('.page.active');
+		var currentPage = Util.getFirst('sauna-page.active');
 		if( currentPage === pageElement )
 			return;
 
-		this.makeTransitionPop( page ,currentPage );
+		this.makeTransitionPop( pageElement ,currentPage );
 	}
 
 	popPageFromPage( pageToPop, prevPage )
 	{
-		var pageToPopId = pageToPop.getAttribute('id');
-		var ids			= {};
-
 		this.makeTransitionPop( prevPage ,pageToPop );
 	}
 
 	makeTransitionPop( previous ,current)
 	{
-		let currentId = current.getAttribute('id');
-		let currentPage	= this.router.getById( currentId );
-
-		if( currentPage )
-			currentPage.onHide();
-
-		let prevId	= previous.getAttribute('id');
-		let prevPage = this.router.getById( prevId );
-
-		if( prevPage )
-			prevPage.onShow();
-
-		previous.classList.add('active');
-		previous.classList.remove('previous');
-		current.classList.remove('active');
-		current.classList.remove('previous');
+		previous.pushOut();
+		current.popOut();
+		//previous.classList.add('active');
+		//previous.classList.remove('previous');
+		//current.classList.remove('active');
+		//current.classList.remove('previous');
 	}
 
-	removeNotPrevious()
+	removePreviousFromStack()
 	{
-		var z = Utils.getAll('.page.previous');
+		let divs = Array.from( document.querySelectorAll('sauna-page') );
 
-		for(var i=0;i<z.length;i++)
+		let ids = {};
+
+		this.history.forEach(( i ) =>
 		{
-			var found	= false;
+			ids[ this.getPageIdByHash( i ) ] = 1;
+		});
 
-			for(var j=0;j<this.history.length;j++)
-			{
-				if( this.history[ j ].indexOf( z[i].getAttribute('id') ) !== -1 )
-				{
-					found = true;
-					break;
-				}
-			}
-
-			if( !found )
-			{
-				let pageId 	= z[i].getAttribute('id' );
-				let page	= this.router.getById( pageId  )
-
-				if( page.options.removeOnPop )
-				{
-					if( this.debug )
-						console.log( 'Remove on Pop '+page.getId() );
-
-					z[i].remove();
-					page.onRemove();
-					this.router.removePageById( pageId );
-				}
-				else
-				{
-					z[ i ].classList.add('noanimation');
-					z[ i ].classList.remove('previous');
-
-					var x = 0+i;
-
-					setTimeout(()=> //jshint: ignore line
-					{
-						z[x].classList.remove('noanimation');
-					},100);
-				}
-			}
-		}
-	}
-
-	loadPages(pages)
-	{
-		let promises	= pages.map((i)=> Utils.ajax({ url : i ,dataType : 'text',overrideMimeType: 'text/plain'}));
-		return Promise.all( promises )
-		.then((responses)=>
+		divs.forEach((div)=>
 		{
-			let d 			= document.createElement('div');
-			d.innerHTML		= responses.reduce( (p,c)=> p+c, '' );
-			let allChilds	= Array.from( d.children );
-
-			allChilds.forEach( ac=>document.body.appendChild( ac ));
-
-			this.log('It finish Load',responses.length, responses );
-
-			return Promise.resolve( pages );
+			let id = div.getAttribute('id');
+			if( !(id in ids ) )
+			{
+				console.log('Success remove Animation');
+				div.classList.add('noanimation');
+				div.classList.remove('previous');
+				div.classList.remove('noanimation');
+			}
 		});
 	}
 }

@@ -1,7 +1,10 @@
-Utils.addOnLoad(()=>
+import Navigation from '../js/Navigation.js';
+import Util from '../js/Util.js';
+
+Util.addOnLoad(()=>
 {
 
-  let n = new NavigationSpa();
+  let n = new Navigation();
 
 	//let page1 = new Page({ element: '#page1'});
 	//let page2 = new Page({ element: '#page2'});
@@ -33,5 +36,3 @@ Utils.addOnLoad(()=>
 
 	n.setPageInit( 'page1' );
 });
-
-

@@ -7,18 +7,13 @@ body
 }
 
 
-body>.page>header
+body header
 {
 	background-color		: #ffffff;
 	box-shadow				: 0px 3px 5px -1px rgba(0,0,0,0.3);
 	z-index					: 2;
 }
 
-.page>main
-{
-	padding					: 1em;
-	box-sizing				: border-box;
-}
 .list
 {
 	margin					: 10px 0;
@@ -87,7 +82,7 @@ body>.page>header
 	align-self				: auto;
 }
 
-.page>header>h1
+header>h1
 ,.header_buttons>h1
 {
 	padding					: 0 10px 0 20px;
@@ -432,7 +427,7 @@ input[type="submit"]
 
 @media( min-width: 800px )
 {
-  .menu_active .page.active
+  .menu_active .active
   {
 	left					: 200px;
   }
