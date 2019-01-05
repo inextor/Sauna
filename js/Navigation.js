@@ -1,14 +1,14 @@
 import Util from './Util.js';
 import Page from './Page.js';
 import Panel from './Panel.js';
-import Router from './Router.js';
+//import Router from './Router.js';
 
 export default class Navigation
 {
 	constructor()
 	{
 		this.history	= [];
-		this.router	= new Router( this );
+//		this.router	= new Router( this );
 	}
 
 	getPageIdByHash( href )
@@ -354,8 +354,8 @@ export default class Navigation
 
 		if( currentPage !== pageElement )
 			this.makeTransitionPush( currentPage, pageElement );
-		else
-			this.router.run( window.location.href );
+		//else
+		//	this.router.run( window.location.href );
 	}
 
 	getElementByHref( href )
