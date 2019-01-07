@@ -298,7 +298,7 @@ export default class Navigation
 
 	pushPageFromPage( nextPageElement, currentPageElement, is_replace )
 	{
-		//current.dispatchEvent(new CustomEvent('page-hide',{bubbles: false, detail:{}}));
+		currentPageElement.dispatchEvent(new CustomEvent('page-hide',{bubbles: false, detail:{}}));
 		this.makeTransitionPush( currentPageElement, nextPageElement, is_replace );
 	}
 
@@ -407,7 +407,7 @@ export default class Navigation
 
 	makeTransitionPop( previous ,current)
 	{
-		//current.dispatchEvent(new CustomEvent('page-hide',{bubbles: false, detail:{}}));
+		current.dispatchEvent(new CustomEvent('page-hide',{bubbles: false, detail:{}}));
 		previous.pushOut();
 		current.popOut();
 		//previous.classList.add('active');
