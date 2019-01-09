@@ -359,6 +359,7 @@ class NavigationSpa
 		if( bang !== -1 )
 		{
 			clickedHashId = clickedHashId.substring( 0, bang );
+
 		}
 
 		return Utils.getById( clickedHashId );

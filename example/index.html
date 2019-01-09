@@ -1,131 +1,111 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Project Genus</title>
-    <link rel="stylesheet" href="../css/Core.css">
-    <link rel="stylesheet" href="../css/Theme.css">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Project Genus</title>
+		<link rel="stylesheet" href="../css/Theme.css">
+		<script src="example.js" type="module"></script>
+	</head>
+	<body>
+		<sauna-page id="page1">
+			<header> <h1>page 1</h1>
+			</header>
+			<main>
+				<a href="#page1">Page 1</a>
+				<a href="#page2">Page 2</a>
+				<a href="#page3">Page 3</a>
+				<a href="#page4">Page 4</a>
+				<a href="#page5">Page 5</a>
+				<a href="#page6">Page 6</a>
 
-    <script src="Util.js"></script>
-    <script src="../js/NavigationSpa.js"></script>
-    <script src="../js/Router.js"></script>
-    <script src="../js/Page.js"></script>
-    <script src="example.js"></script>
-  </head>
-  <body>
-    <div class="page" id="page1">
-      <header> <h1>page 1</h1>
-      </header>
-      <main>
+				<a href="#menu1">Menu1</a>
+			</main>
+			<footer></footer>
+		</sauna-page>
+		<sauna-page id="page2">
+			<header> page2 </header>
+			<main>
+			content 2
+			<a href="#page1!/somethingMuahahahaha">to Page 1</a>
+			<a href="#page2!1">Page 2-1</a>
+			<a href="#page2!2">Page 2-2</a>
+			<a href="#page2!3">Page 2-3</a>
+			<a href="#page2!4">Page 2-4</a>
+			<a href="#page2!5">Page 2-5</a>
+			<a href="#page2!6">Page 2-6</a>
+			<a href="#page2!7">Page 2-7</a>
 
-        <a href="#page1">Page 1</a>
-        <a href="#page2">Page 2</a>
-        <a href="#page3">Page 3</a>
-        <a href="#page4">Page 4</a>
-        <a href="#page5">Page 5</a>
-        <a href="#page6">Page 6</a>
+			<a href="#page1">Page 1</a>
+			<a href="#page2">Page 2</a>
+			<a href="#page3">Page 3</a>
+			<a href="#page4">Page 4</a>
+			<a href="#page5">Page 5</a>
+			<a href="#page6">Page 6</a>
 
-        <a href="#menu1">Menu1</a>
-      </main>
-      <footer>
-      </footer>
-    </div>
-    <div class="page" id="page2">
-      <header> page2 </header>
-      <main>
-        content 2
-        <a href="#page1!/somethingMuahahahaha">to Page 1</a>
-        	<a href="#page2!1">Page 2-1</a>
-        	<a href="#page2!2">Page 2-2</a>
-        	<a href="#page2!3">Page 2-3</a>
-        	<a href="#page2!4">Page 2-4</a>
-        	<a href="#page2!5">Page 2-5</a>
-        	<a href="#page2!6">Page 2-6</a>
-        	<a href="#page2!7">Page 2-7</a>
+			<a href="#menu2!fasdfasdf">Menu2</a>
+			</main>
+			<footer></footer>
+		</sauna-page>
 
-		 	<a href="#page1">Page 1</a>
-        	<a href="#page2">Page 2</a>
-        	<a href="#page3">Page 3</a>
-        	<a href="#page4">Page 4</a>
-        	<a href="#page5">Page 5</a>
-        	<a href="#page6">Page 6</a>
+		<sauna-page id="page3">
+			<header> page3 </header>
+			<main>
+				<div class="container">content 3
+					<a href="#page1">Page 1</a>
+					<a href="#page2">Page 2</a>
+					<a href="#page3">Page 3</a>
+					<a href="#page4">Page 4</a>
+					<a href="#page5">Page 5</a>
+					<a href="#page6">Page 6</a>
+				</div>
+			</main>
+		</sauna-page>
+		<sauna-page id="page4">
+			<header> page4 </header>
+			<main>
+				<div class="container">content 4
+					<a href="#page1">Page 1</a>
+					<a href="#page2">Page 2</a>
+					<a href="#page3">Page 3</a>
+					<a href="#page4">Page 4</a>
+					<a href="#page5">Page 5</a>
+					<a href="#page6">Page 6</a>
+				</div>
+			</main>
+		</sauna-page>
 
-        <a href="#menu2!fasdfasdf">Menu2</a>
-      </main>
-      <footer>
-      </footer>
-    </div>
-
-    <div class="page" id="page3">
-      <header> page3 </header>
-      <main>
-        <div class="container">content 3
-        	<a href="#page1">Page 1</a>
-        	<a href="#page2">Page 2</a>
-        	<a href="#page3">Page 3</a>
-        	<a href="#page4">Page 4</a>
-        	<a href="#page5">Page 5</a>
-        	<a href="#page6">Page 6</a>
-        </div>
-      </main>
-    </div>
-<div class="page" id="page4">
-      <header> page4 </header>
-      <main>
-        <div class="container">content 4
-        	<a href="#page1">Page 1</a>
-        	<a href="#page2">Page 2</a>
-        	<a href="#page3">Page 3</a>
-        	<a href="#page4">Page 4</a>
-        	<a href="#page5">Page 5</a>
-        	<a href="#page6">Page 6</a>
-        </div>
-      </main>
-    </div>
-
-<div class="page" id="page5">
-      <header> page5 </header>
-      <main>
-        <div class="container">content 5
-        	<a href="#page1">Page 1</a>
-        	<a href="#page2">Page 2</a>
-        	<a href="#page3">Page 3</a>
-        	<a href="#page4">Page 4</a>
-        	<a href="#page5">Page 5</a>
-        	<a href="#page6">Page 6</a>
-        </div>
-      </main>
-    </div>
-
-<div class="page" id="page6">
-      <header> page5 </header>
-      <main>
-        <div class="container">content 6
-        	<a href="#page1">Page 1</a>
-        	<a href="#page2">Page 2</a>
-        	<a href="#page3">Page 3</a>
-        	<a href="#page4">Page 4</a>
-        	<a href="#page5">Page 5</a>
-        	<a href="#page6">Page 6</a>
-        </div>
-      </main>
-    </div>
-
-
-
-
-
-
-
-
-
-	<div class="panel right" id="menu1">
-		Hellow World
-	</div>
-	<div class="panel left" id="menu2">
-		Hellow World
-	</div>
-  </body>
+		<sauna-page id="page5">
+			<header> page5 </header>
+			<main>
+				<div class="container">content 5
+					<a href="#page1">Page 1</a>
+					<a href="#page2">Page 2</a>
+					<a href="#page3">Page 3</a>
+					<a href="#page4">Page 4</a>
+					<a href="#page5">Page 5</a>
+					<a href="#page6">Page 6</a>
+				</div>
+			</main>
+		</sauna-page>
+		<sauna-page id="page6">
+			<header> page5 </header>
+			<main>
+				<div class="container">content 6
+					<a href="#page1">Page 1</a>
+					<a href="#page2">Page 2</a>
+					<a href="#page3">Page 3</a>
+					<a href="#page4">Page 4</a>
+					<a href="#page5">Page 5</a>
+					<a href="#page6">Page 6</a>
+				</div>
+			</main>
+		</sauna-page>
+		<sauna-panel type="right" id="menu1">
+			Hellow World
+		</sauna-panel>
+		<sauna-panel type="left" id="menu2">
+			Hellow World
+		</sauna-panel>
+	</body>
 </html>
-

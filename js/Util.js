@@ -1,4 +1,4 @@
-class Util
+export default class Util
 {
 	static addOnLoad(callback)
 	{

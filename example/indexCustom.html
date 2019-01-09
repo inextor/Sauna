@@ -1,0 +1,61 @@
+<!Doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<sauna-page class="active" id="foo" animation="enabled" style="background-color:#FFEEEE;">
+			<b>Foo</b><br>
+			<a id="pushBar" href="#bar">push bar</a><br>
+			<a id="popToBar" href="#bar">Pop To bar</a><br>
+		</sauna-page>
+		<sauna-page id="bar" animation="enabled" style="background-color:#EEEEFF;">
+			<b>Bar</b><br>
+			<a id="pushFoo" href="#foo">push foo</a><br>
+			<a id="popToFoo" href="#bar">Pop To foo</a><br>
+		</sauna-page>
+	</body>
+	<!--
+	<script src="../js/Page.js"></script> -->
+	<!--script src="../js/NavigationPage.js" type="module"></script -->
+	<script type="module">
+import Navigation from '../js/NavigationPage.js';
+		window.addEventListener('load',()=>
+		{
+
+			//document.getElementById('pushFoo').addEventListener('click',(evt)=>
+			//
+			//{
+			//	document.getElementById("bar").popIn();
+			//	document.getElementById("foo").pushIn();
+			//	evt.preventDefault();
+			//	evt.stopPropagation();
+			//});
+			//document.getElementById('pushBar').addEventListener('click',(evt)=>
+			//{
+			//	document.getElementById("bar").pushIn();
+			//	document.getElementById("foo").popIn();
+			//	evt.preventDefault();
+			//	evt.stopPropagation();
+			//});
+			//document.getElementById('popToBar').addEventListener('click',(evt)=>
+			//{
+			//	document.getElementById("bar").pushOut();
+			//	document.getElementById("foo").popOut();
+			//	evt.preventDefault();
+			//	evt.stopPropagation();
+			//});
+			//document.getElementById('popToFoo').addEventListener('click',(evt)=>
+			//{
+			//	document.getElementById("bar").popOut();
+			//	document.getElementById("foo").pushOut();
+			//	evt.preventDefault();
+			//	evt.stopPropagation();
+			//});
+
+			let n = new Navigation();
+			n.setPageInit("foo");
+		});
+
+	</script>
+</html>
