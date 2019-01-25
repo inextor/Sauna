@@ -1,54 +1,57 @@
+:root {
+  --panel-width: 320px;
+  --transition-speed: all 0.3s ease;
+  --panel-negative-width: -320px;
+}
+
 
 body
 {
   overflow				: hidden;
-  padding					: 0;
-  margin					: 0;
+  padding				: 0;
+  margin				: 0;
   position				: absolute;
-  top						: 0px;
-  left					: 0px;
-  right					: 0px;
-  bottom					: 0px;
+  top					: 0;
+  left					: 0;
+  right					: 0;
+  bottom				: 0;
+
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.panel
+sauna-panel
 {
   position				: absolute;
-  /*transition				: all 0.3s ease;*/
-  transition				: all 0.5s ease;
+  transition			: var( --transition-speed );
   width					: 100%;
-  max-width				: 200px;
-  top						: 0;
-  bottom					: 0;
+  max-width				: var(--panel-width);
+  top					: 0;
+  bottom				: 0;
   background-color		: white;
-  z-index					: 5;
-  pointer-events			: all;
+  z-index				: 5;
+  pointer-events		: all;
 }
 
-.panel.right
+sauna-panel.right
 {
   transform				: translate3d(100%,0,0);
-  -webkit-transform		: translate3d(100%,0,0);
   right					: 0;
 }
 
-.panel.left
+sauna-panel.left
 {
   transform				: translate3d(-100%,0,0);
-  -webkit-transform		: translate3d(-100%,0,0);
   left					: 0;
 }
 
-.panel.right.open
-,.panel.left.open
+.panel-open-right sauna-panel.right.open
+,.panel-open-left sauna-panel.left.open
 {
   z-index					: 5;
   transform				: translate3d(0,0,0);
-  -webkit-transform		: translate3d(0,0,0);
 }
 
-.page
+sauna-page
 {
   position				: fixed;
   top						: 0;
@@ -57,127 +60,79 @@ body
   bottom					: 0;
   /*width					: 100%;*/
   overflow				: hidden;
-  transition				: all 0.3s ease;
+  transition				: var( --transition-speed );
   z-index					: 1;
-  -webkit-transform		: translate3d(100%,0,0);
   transform				: translate3d(100%,0,0);
   box-sizing			: border-box;
 }
 
-.page.active
+sauna-page.active
 {
   z-index					: 3;
   display					: block;
-  -webkit-transform		: translate3d(0,0,0);
   transform				: translate3d(0,0,0);
 }
-.page.noanimation
+sauna-page.noanimation
 {
   z-index					: 2;
   transition				: all 0s linear;
-  -moz-transition-property: none;
-  -webkit-transition-property: none;
-  -o-transition-property: none;
   transition-property: none;
 }
 
-.page.previous.noanimation
+sauna-page.previous.noanimation
 {
-
   z-index					: 1;
   transition				: all 0s linear;
   transform				: translate3d(100%,0,0);
-  -moz-transition-property: none;
-  -webkit-transition-property: none;
-  -o-transition-property: none;
   transition-property: none;
-
 }
 
-.page.previous
-,.start.page.previous
+sauna-page.previous
+,sauna-page.start.previous
 {
   transform				: translate3d(-100%,0,0);
-  -webkit-transform		: translate3d(-100%,0,0);
-  display					: block;
+  display				: block;
 }
-.page.previous.active
+
+sauna-page.previous.active
 {
   transform				: translate3d(0,0,0);
-  -webkit-transform		: translate3d(0,0,0);
-  display					: block;
-}
-
-.page header
-{
-  height					: 45px;
-  position				: absolute;
-  top						: 0;
-  right					: 0;
-  left					: 0;
-}
-
-.page main
-{
-  top						: 45px;
-  position				: absolute;
-  bottom					: 40px;
-  left					: 0;
-  right					: 0;
-  overflow-y				: auto;
-  overflow-x				: hidden;
-}
-
-.page main:first-child
-{
-  top						: 0;
-}
-.page main:last-child
-{
-  bottom					: 0;
-}
-
-
-.page footer
-{
-  height				: 40px;
-  width					: 100%;
-}
-
-.page>footer
-{
-  position				: absolute;
-  bottom				: 0;
-  left					: 0;
-  right					: 0;
-  height				: 40px;
-}
-
-.start.page
-{
-  left		: 0;
-}
-
-.container
-{
-  box-shadow				: 0px 3px 5px -1px rgba(0,0,0,0.3);
-  border					: 1px solid #dbe1e8;
-  background				: #ffffff;
-  margin					: 0 auto;
+  display				: block;
 }
 
 @media( max-width: 799px )
 {
-	/*
-  .panel_open.right .page.active
+  .panel-open-right sauna-page.active
   {
-    right					: 200px;
+  	transform		: translate3d(var(--panel-negative-width),0,0);
     width					: 100%;
   }
-  .panel_open.left .page.active
+  .panel-open-left sauna-page.active
   {
-    left					: 200px;
+    /*left					:  var(--panel-width );*/
     width					: 100%;
+	transform : translate3d(var(--panel-width),0,0);
   }
-  */
+}
+
+@media( min-width: 800px )
+{
+	.panel-always-open-left sauna-page
+  	,.panel-always-open-left.panel-open-right sauna-page.active
+	{
+		width: 100%;
+		left: var(--panel-width);
+	}
+	.panel-always-open-rigth sauna-page
+  	,.panel-always-open-right.panel-open-right sauna-page.active
+	{
+		width: 100%;
+		right: var(--panel-width);
+	}
+	.panel-always-open-left sauna-panel.static
+	,.panel-always-open-right sauna-panel.static
+	{
+    	z-index: 5;
+    	transform: translate3d(0,0,0);
+	}
 }
