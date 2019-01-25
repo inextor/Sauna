@@ -1,4 +1,4 @@
-import Navigation from '../js/Navigation.js';
+import Navigation from '../js/NavigationSpa.js';
 import Util from '../js/Util.js';
 
 Util.addOnLoad(()=>

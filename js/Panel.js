@@ -2,11 +2,12 @@ const template = document.createElement('template');
 
 template.innerHTML = `
   <style>
+	/*
 
 :host
 {
   position				: absolute;
-  /*transition				: all 0.3s ease;*/
+  /*transition				: all 0.3s ease;* /
   transition				: all 0.5s ease;
   width					: 100%;
   max-width				: 200px;
@@ -39,6 +40,7 @@ template.innerHTML = `
   transform				: translate3d(0,0,0);
   -webkit-transform		: translate3d(0,0,0);
 }
+*/
   </style>
   <slot></slot>
 `;

@@ -4,10 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Project Genus</title>
-		<link rel="stylesheet" href="../css/Theme.css">
+		<link rel="stylesheet" href="../css/Sauna.css">
+		<link rel="stylesheet" href="Theme.css">
 		<script src="example.js" type="module"></script>
 	</head>
-	<body>
+	<body class="panel-always-open-left">
 		<sauna-page id="page1">
 			<header> <h1>page 1</h1>
 			</header>
@@ -18,38 +19,38 @@
 				<a href="#page4">Page 4</a>
 				<a href="#page5">Page 5</a>
 				<a href="#page6">Page 6</a>
-
-				<a href="#menu1">Menu1</a>
+				<br>
+				<a href="#menu1">Menu left</a>
+				<a href="#menu2">Menu right</a>
 			</main>
 			<footer></footer>
 		</sauna-page>
-		<sauna-page id="page2">
-			<header> page2 </header>
+		<sauna-page id="page2" >
+			<header><h1>page2</h1></header>
 			<main>
-			content 2
-			<a href="#page1!/somethingMuahahahaha">to Page 1</a>
-			<a href="#page2!1">Page 2-1</a>
-			<a href="#page2!2">Page 2-2</a>
-			<a href="#page2!3">Page 2-3</a>
-			<a href="#page2!4">Page 2-4</a>
-			<a href="#page2!5">Page 2-5</a>
-			<a href="#page2!6">Page 2-6</a>
-			<a href="#page2!7">Page 2-7</a>
-
-			<a href="#page1">Page 1</a>
-			<a href="#page2">Page 2</a>
-			<a href="#page3">Page 3</a>
-			<a href="#page4">Page 4</a>
-			<a href="#page5">Page 5</a>
-			<a href="#page6">Page 6</a>
-
-			<a href="#menu2!fasdfasdf">Menu2</a>
+				content 2
+				<a href="#page1">Page 1</a>
+				<a href="#page2">Page 2</a>
+				<a href="#page3">Page 3</a>
+				<a href="#page4">Page 4</a>
+				<a href="#page5">Page 5</a>
+				<a href="#page6">Page 6</a>
+				<br>
+				<a href="#page1!/somethingMuahahahaha">to Page 1</a>
+				<a href="#page2!1">Page 2-1</a>
+				<a href="#page2!2">Page 2-2</a>
+				<a href="#page2!3">Page 2-3</a>
+				<a href="#page2!4">Page 2-4</a>
+				<a href="#page2!5">Page 2-5</a>
+				<a href="#page2!6">Page 2-6</a>
+				<a href="#page2!7">Page 2-7</a>
+				<a href="#menu2!fasdfasdf">Menu2</a>
 			</main>
 			<footer></footer>
 		</sauna-page>
 
 		<sauna-page id="page3">
-			<header> page3 </header>
+			<header><h1> page3</h1> </header>
 			<main>
 				<div class="container">content 3
 					<a href="#page1">Page 1</a>
@@ -62,7 +63,7 @@
 			</main>
 		</sauna-page>
 		<sauna-page id="page4">
-			<header> page4 </header>
+			<header><h1> page4 </h1></header>
 			<main>
 				<div class="container">content 4
 					<a href="#page1">Page 1</a>
@@ -76,7 +77,7 @@
 		</sauna-page>
 
 		<sauna-page id="page5">
-			<header> page5 </header>
+			<header><h1> page5 </h1> </header>
 			<main>
 				<div class="container">content 5
 					<a href="#page1">Page 1</a>
@@ -89,7 +90,7 @@
 			</main>
 		</sauna-page>
 		<sauna-page id="page6">
-			<header> page5 </header>
+			<header><h1> page5</h1> </header>
 			<main>
 				<div class="container">content 6
 					<a href="#page1">Page 1</a>
@@ -101,10 +102,10 @@
 				</div>
 			</main>
 		</sauna-page>
-		<sauna-panel type="right" id="menu1">
+		<sauna-panel type="right" id="menu1" class="left static" >
 			Hellow World
 		</sauna-panel>
-		<sauna-panel type="left" id="menu2">
+		<sauna-panel type="left" id="menu2" class="right">
 			Hellow World
 		</sauna-panel>
 	</body>

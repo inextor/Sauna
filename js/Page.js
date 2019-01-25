@@ -2,6 +2,7 @@ const template = document.createElement('template');
 
 template.innerHTML = `
   <style>
+/*
 	:host(.pop_left2right)
 	{
 		animation-fill-mode: both;
@@ -77,7 +78,7 @@ template.innerHTML = `
   		left					: 0;
   		right					: 0;
   		bottom					: 0;
-  		/*width					: 100%;*/
+  		/*width					: 100%;* /
   		overflow				: hidden;
   		z-index					: 1;
   		box-sizing			: border-box;
@@ -89,7 +90,7 @@ template.innerHTML = `
 	{
 		/*
   		transition				: all 0.3s ease;
-		*/
+		* /
 	}
 
 	,:host(.previous)
