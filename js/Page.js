@@ -4,7 +4,6 @@ template.innerHTML = `
   <style>
 	:host
 	{
-		background-color: #eeffff;
 		position: absolute;
 		top: 0;
 		right: 0;
