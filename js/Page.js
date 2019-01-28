@@ -2,7 +2,6 @@ const template = document.createElement('template');
 
 template.innerHTML = `
   <style>
-
 	:host
 	{
 		background-color: #eeffff;
@@ -11,45 +10,12 @@ template.innerHTML = `
 		right: 0;
 		left: 0;
 		bottom: 0;
+		overflow: hidden;
 	}
-
-    .main{
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        align-content: stretch;
-        align-items: stretch;
-        height: 100%;
-    }
-	.header
-	{
-		order: 0;
-		flex: 0 1 auto;
-		align-self: auto;
-	}
-
-	.content {
-		order: 0;
-		flex: 1 1 auto;
-		align-self: auto;
-		overflow: auto;
-	}
-
-	.footer{
-		order: 0;
-		flex: 0 1 auto;
-		align-self: auto;
-    }
-</style>
-		<div class="main">
-			<slot name="header" class="header"></slot>
-			<div class="content">
-				<div class="real_content"><slot name="main"></slot></div>
-			</div>
-			<slot class="footer" name="footer"></div>
-		</div>
-	`;
+	</style>
+	<div>
+		<slot></slot>
+	</div>`;
 
 class Page extends HTMLElement
 {
