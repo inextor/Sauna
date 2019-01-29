@@ -46,7 +46,7 @@ export default class Navigation
 				return;
 			}
 
-			let hash = this.getPageIdByHash( href );
+			let hash = old_self.getPageIdByHash( href );
 
 			var obj	= Util.getById( hash );
 
