@@ -5,6 +5,7 @@ Util.addOnLoad(()=>
 {
 
   let n = new Navigation();
+	n.debug = true;
 
 	//let page1 = new Page({ element: '#page1'});
 	//let page2 = new Page({ element: '#page2'});
@@ -35,4 +36,13 @@ Util.addOnLoad(()=>
 	//console.log('Page 1 is ', page1.getId() );
 
 	n.setPageInit( 'page1' );
+	page1 = document.getElementById('page1');
+	page1.addEventListener('page-show',(evt)=>
+	{
+		console.log('Page1 show',evt);
+	});
+	page1.addEventListener('page-hide',(evt)=>
+	{
+		console.log('Page1 hide',evt);
+	});
 });
