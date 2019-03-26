@@ -465,4 +465,24 @@ export default class Navigation
 			}
 		});
 	}
+
+	loadPages(pages)
+	{
+		let promises	= pages.map((i)=> fetch( i ).then( (i)=> i.text() ) );
+
+		return Promise.all( promises )
+		.then((responses)=>
+		{
+			let d 			= document.createElement('div');
+			d.innerHTML		= responses.reduce( (p,c)=> p+c, '' );
+			let allChilds	= Array.from( d.children );
+
+			allChilds.forEach( ac=>document.body.appendChild( ac ));
+
+			if( this.debug )
+				console.log('It finish Load',responses.length, responses );
+
+			return Promise.resolve( pages );
+		});
+	}
 }
