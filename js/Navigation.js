@@ -232,9 +232,12 @@ export default class Navigation
 		else
 		{
 			let length = this.history.length;
-			this.processEvent( 'GO_BACK', document.location.hash );
-			this.removePreviousFromStack();
-			this.history.splice( index+1 ,  length-index);
+			if( length > 1 )
+			{
+				this.processEvent( 'GO_BACK', document.location.hash );
+				this.removePreviousFromStack();
+				this.history.splice( index+1 ,  length-index);
+			}
 		}
 	}
 
